@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Details</title>
+</head>
+<body>
+    <h1>Get User Details</h1>
+    <form id="userForm">
+        <label for="userId">User ID:</label>
+        <input type="text" id="userId" name="userId">
+        <button type="button" id="getDetailsButton">Get Details</button>
+    </form>
+    <div id="userDetails"></div>
+    <script>
+        document.getElementById('getDetailsButton').addEventListener('click', function() {
+    var userId = document.getElementById('userId').value;
+    var userDetailsDiv = document.getElementById('userDetails');
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET','D:2023\WEB TECH\sample prog\MY EXAMPLES\ex3\datas.xml', true);
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                var xmlDoc = xhr.responseXML;
+                var user = xmlDoc.querySelector('user[user_id="' + userId + '"]');
+
+                if (user) {
+                    var name = user.querySelector('name').textContent;
+                    var email = user.querySelector('email').textContent;
+                    userDetailsDiv.innerHTML = `
+                        <h2>User Details</h2>
+                        <p>User ID: ${userId}</p>
+                        <p>Name: ${name}</p>
+                        <p>Email: ${email}</p>
+                    `;
+                } else {
+                    userDetailsDiv.innerHTML = 'User not found.';
+                }
+            } else {
+                userDetailsDiv.innerHTML = 'Error loading XML.';
+            }
+        }
+    };
+    xhr.send();
+});
+    </script>
+</body>
+</html>
